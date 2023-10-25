@@ -19,6 +19,10 @@ function Ejercicio01(){
     const newFile = e.target.value;
     setShowText(newFile);
   }
+
+  const clearArea = ()=>{
+    setShowText(' ')
+  }
   
   return(
     <div className='text-center h-screen w-screen bg-lime-200 
@@ -36,6 +40,7 @@ function Ejercicio01(){
             onChange={changeTextArea} rows="15" >
             {ShowText}
           </textarea> 
+          <button onClick={clearArea}>Limpiar</button>
         </div>
     </div> 
   )
