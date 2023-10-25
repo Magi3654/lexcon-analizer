@@ -40,7 +40,7 @@ function Ejercicio01(){
             onChange={changeTextArea} rows="15" >
             {ShowText}
           </textarea> 
-          <button onClick={clearArea}>Limpiar</button>
+          <button className='bg-violet-900 rounded-md p-3 shadow-lg hover:bg-lime-400'onClick={clearArea}>Limpiar</button>
         </div>
     </div> 
   )
