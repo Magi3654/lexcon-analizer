@@ -21,17 +21,17 @@ function Ejercicio01(){
   }
   
   return(
-    <div className='text-center bg-lime-200'>
-        <div className='text-information'>
-          <h3 className=' font-bold text-4xl text-black'>Inserta tu archivo</h3>
-          <input className='file-upload-input font-bold text-2xl text-black' type='file' accept='.txt' multiple onChange={e=>{changeText(e)}}/>
+    <div className='text-center h-screen bg-lime-200 font-mono'>
+        <div className='text-information p-4'>
+          <h3 className=' font-bold text-4xl text-violet-950'>Inserta tu archivo</h3>
+          <input className='file-upload-input font-bold text-2xl text-violet-950 m-2 p-4' type='file' accept='.txt' multiple onChange={e=>{changeText(e)}}/>
         </div>
         <div>
-          <p className='text-2xl font-bold text-black'>Número de caracteres escritos: {ShowText ? ShowText.length : 0}</p>
+          <p className='text-2xl font-bold text-violet-950'>Letras escritas: {ShowText ? ShowText.length : 0}</p>
         </div>
         
         <div className='text-center'>
-          <textarea  className='h-500 w-500 m-3 text-slate-950 font-sans text-2xl bg-transparent' value={ShowText || ''} onChange={changeTextArea} rows="30" cols="105" >
+          <textarea  className='m-4 text-slate-950 font-mono text-2xl bg-violet-200 rounded-md' value={ShowText || ''} onChange={changeTextArea} rows="15" cols="90" >
             {ShowText}
           </textarea> 
         </div>
