@@ -11,7 +11,7 @@ function Ejercicio01(){
       e.preventDefault();
       const file = e.target.result;
       const onlyLetters = file.replace(/[^a-zA-Z]/g, '');
-      const letters = onlyLetters.split('').join(',')
+      const letters = onlyLetters.split('')
       setShowText(letters);
     }
   }
