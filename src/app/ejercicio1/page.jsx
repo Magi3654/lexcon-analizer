@@ -21,7 +21,7 @@ function Ejercicio01(){
   }
   
   return(
-    <div className='text-center h-screen bg-lime-200 font-mono'>
+    <div className='text-center h-screen w-screen bg-lime-200 font-mono'>
         <div className='text-information p-4'>
           <h3 className=' font-bold text-4xl text-violet-950'>Inserta tu archivo</h3>
           <input className='file-upload-input font-bold text-2xl text-violet-950 m-2 p-4' type='file' accept='.txt' multiple onChange={e=>{changeText(e)}}/>
@@ -31,7 +31,8 @@ function Ejercicio01(){
         </div>
         
         <div className='text-center'>
-          <textarea  className='m-4 text-slate-950 font-mono text-2xl bg-violet-200 rounded-md' value={ShowText || ''} onChange={changeTextArea} rows="15" cols="90" >
+          <textarea  className='m-4 text-slate-950 font-mono text-2xl bg-violet-200 rounded-md w-full' value={ShowText || ''} 
+            onChange={changeTextArea} rows="15" >
             {ShowText}
           </textarea> 
         </div>
