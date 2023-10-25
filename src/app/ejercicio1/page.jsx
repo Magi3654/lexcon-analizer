@@ -28,7 +28,9 @@ function Ejercicio01(){
     <div className='text-center h-screen w-screen bg-lime-200 
       font-mono mb-5 flex-col justify-center'>
         <div className='text-information p-4'>
-          <h3 className=' font-bold text-4xl text-violet-950'>Inserta tu archivo</h3>
+          <h3 className='font-bold text-4xl text-violet-950'>Instrucciones</h3>
+          <h4 className='font-bold text-3xl text-violet-950'>Esta practica lee un archivo de texto plano como resultado muestra los caracteres las letras: [a-zA-Z]</h4>
+          <h3 className=' font-bold text-3xl text-violet-950 p-2 m-2'>Inserta tu archivo</h3>
           <input className='file-upload-input font-bold text-2xl text-violet-950 m-2 p-4' type='file' accept='.txt' multiple onChange={e=>{changeText(e)}}/>
         </div>
         <div>
