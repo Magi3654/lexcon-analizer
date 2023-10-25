@@ -31,7 +31,7 @@ function Ejercicio01(){
         </div>
         
         <div className='text-center'>
-          <textarea  className='h-500 w-500 m-3 text-slate-950 font-sans text-2xl' value={ShowText || ''} onChange={changeTextArea} rows="30" cols="105" >
+          <textarea  className='h-500 w-500 m-3 text-slate-950 font-sans text-2xl bg-transparent' value={ShowText || ''} onChange={changeTextArea} rows="30" cols="105" >
             {ShowText}
           </textarea> 
         </div>
