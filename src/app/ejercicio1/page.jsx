@@ -23,7 +23,7 @@ function Ejercicio01(){
         </div>
         <input className='file-upload-input font-bold text-2xl text-black' type='file' accept='.txt' multiple onChange={e=>{changeText(e)}}/>
         <div className='text-center'>
-          <textarea  className='h-500 w-500 m-3 text-slate-950 font-sans' value={ShowText} rows="35" cols="105" >
+          <textarea  className='h-500 w-500 m-3 text-slate-950 font-sans' value={ShowText} rows="30" cols="105" >
             {ShowText}
           </textarea> 
         </div>
