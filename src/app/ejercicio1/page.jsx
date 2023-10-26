@@ -25,24 +25,24 @@ function Ejercicio01(){
   }
   
   return(
-    <div className='text-center h-screen w-screen bg-lime-200 
+    <div className='text-center h-screen w-screen bg-orange-100 
       font-mono mb-5 flex-col justify-center'>
         <div className='text-information p-4'>
-          <h3 className='font-bold text-4xl text-violet-950'>Instrucciones</h3>
-          <h4 className='font-bold text-3xl text-violet-950'>Esta practica lee un archivo de texto plano como resultado muestra los caracteres las letras: [a-zA-Z]</h4>
-          <h3 className=' font-bold text-3xl text-violet-950 p-2 m-2'>Inserta tu archivo</h3>
-          <input className='file-upload-input font-bold text-2xl text-violet-950 m-2 p-4' type='file' accept='.txt' multiple onChange={e=>{changeText(e)}}/>
+          <h3 className='font-bold text-4xl text-rose-950'>Instrucciones</h3>
+          <h4 className='font-bold text-3xl text-rose-950'>Esta practica lee un archivo de texto plano como resultado muestra los caracteres las letras: [a-zA-Z]</h4>
+          <h3 className=' font-bold text-3xl text-rose-950 p-2 m-2'>Inserta tu archivo</h3>
+          <input className='file-upload-input font-bold text-2xl text-rose-950 m-2 p-4' type='file' accept='.txt' multiple onChange={e=>{changeText(e)}}/>
         </div>
         <div>
-          <p className='text-2xl font-bold text-violet-950'>Letras escritas: {ShowText ? ShowText.length : 0}</p>
+          <p className='text-2xl font-bold text-rose-950'>Letras escritas: {ShowText ? ShowText.length : 0}</p>
         </div>
         
         <div className='text-center'>
-          <textarea  className='m-4 text-slate-950 font-mono text-2xl bg-violet-200 rounded-md p-1 pt-2 w-full h-60 mt-5' value={ShowText || ''} 
+          <textarea  className='m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5' value={ShowText || ''} 
             onChange={changeTextArea} rows="15" >
             {ShowText}
           </textarea> 
-          <button className='bg-violet-900 rounded-md p-3 shadow-lg hover:bg-lime-400'onClick={clearArea}>Limpiar</button>
+          <button className='bg-sky-900 rounded-md p-3 shadow-lg hover:bg-orange-800'onClick={clearArea}>Limpiar</button>
         </div>
     </div> 
   )
