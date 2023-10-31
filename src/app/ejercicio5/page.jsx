@@ -5,7 +5,7 @@ import FileSaver from 'file-saver';
 const reservedWords =[
     'auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do',
     'double', 'else', 'enum', 'extern', 'float', 'for', 'goto', 'if', 'int',
-    'long', 'register', 'return', 'short', 'signed', 'sizeof', 'static',
+    'long','main', 'register', 'return', 'short', 'signed', 'sizeof', 'static',
     'struct', 'switch', 'typedef', 'union', 'unsigned', 'void', 'volatile', 'while' 
 ];
 /*
@@ -16,7 +16,7 @@ function removeCommentsFromCode(text) {
     // Elimina comentarios de bloque (/* ... */) usando una expresión regular
     text = text.replace(/\/\*[\s\S]*?\*\//g, '');
   
-    // Elimina comentarios de línea (// ...) usando una expresión regular
+    // Elimina comentarios de línea (// ...) usando una expresión uregular
     text = text.replace(/\/\/.*/g, '');
   
     return text;
@@ -27,10 +27,10 @@ function Ejercicio4() {
     const [foundWords, setFoundWords] = useState([]);
 
     const changeText = (e) => {
+        e.preventDefault()
         const reader = new FileReader();
         reader.readAsText(e.target.files[0]);
         reader.onload = (e) => {
-          e.preventDefault();
           const file = e.target.result;
           const codeWithOutComments = removeCommentsFromCode(file)
           setShowText(codeWithOutComments);
@@ -43,7 +43,7 @@ function Ejercicio4() {
         if (reservedWords.includes(word)) {
           return {
             word,
-            tipo: 'palabra reservada',
+            tipo: 'PR',
           };
         } else if (/[a-zA-Z]+/.test(word)) {
           return {
@@ -63,7 +63,7 @@ function Ejercicio4() {
     }
 
     const saveToTextFile = (data) => {
-        const content = data.map(item => `${item.word} - ${item.tipo}`).join('\n');
+        const content = data.map(item => item.word +"-"+ item.tipo).join('\n');
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         FileSaver.saveAs(blob, 'palabras_analizadas.txt');
     }
