@@ -28,6 +28,9 @@ export const Header = () => {
                 <li className='bg-sky-900 rounded-md p-3 shadow-lg hover:bg-orange-800 text-2xl'>
                   <Link href={'/ejercicio5'}>Ejercicio5 </Link>
                 </li>
+                <li className='bg-sky-900 rounded-md p-3 shadow-lg hover:bg-orange-800 text-2xl'>
+                  <Link href={'/examen'}>Examen </Link>
+                </li>
             </ul> 
         </nav>
     </header>
