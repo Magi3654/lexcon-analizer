@@ -109,7 +109,7 @@ function Examen() {
     }
   
     const findReservedWords = () => {
-        const words = ShowText.match(/\w+/g) || [];
+        const words = ShowText.match(/((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
         const found = words.map((word) => {
             if (reservedWords.some(rw => rw.word === word)) {
                 const rw = reservedWords.find(r => r.word === word);
@@ -154,7 +154,7 @@ function Examen() {
         saveToTextFile(found);
       };
 
-  
+       
     const saveToTextFile = (data) => {
       const content = data.map(item => `${item.word} - ${item.tipo}`).join('\n');
       const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
