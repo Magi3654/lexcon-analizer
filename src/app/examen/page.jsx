@@ -96,13 +96,29 @@ function removeCommentsFromCode(text) {
 function Examen() {
   const [ShowText, setShowText] = useState('');
   const [foundWords, setFoundWords] = useState([]);
+  const [condicion, setCondicion] = useState(true)
+  const [ShowTextFile, setShowTextFile] = useState('');
 
   const changeText = (e) => {
     setShowText(e.target.value);
+    console.log(ShowText);
   };
-
+  
+  const changeTextFile = (e) => {
+    e.preventDefault();
+    const reader = new FileReader();
+    reader.readAsText(e.target.files[0]);
+    reader.onload = (e) => {
+      const file = e.target.result;
+      const codeWithOutComments = removeCommentsFromCode(file);
+      setShowText(codeWithOutComments);
+    }
+  }
+  
+  
   const findReservedWords = () => {
     const words = ShowText.match(/((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
+    console.log(words);
     const found = words.map((word) => {
       if (reservedWords.some((rw) => rw.word === word)) {
         const rw = reservedWords.find((r) => r.word === word);
@@ -144,6 +160,7 @@ function Examen() {
     });
 
     setFoundWords(found);
+    saveToTextFile(found);
   };
 
   const saveToTextFile = () => {
@@ -156,20 +173,50 @@ function Examen() {
     setShowText('');
     setFoundWords([]);
   };
+  const count = () => {
+    if (ShowText) {
+      const words = ShowText.split(/[a-zA-Z]+|[0-9]+/g).filter(word => word.trim() !== "");
+      return words.length;
+    } else {
+      return 0;
+    }
+  }
 
   return (
     <div className="text-center h-screen w-screen bg-orange-100 font-mono mb-5 flex-col justify-center">
-      <textarea
-        className="m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5"
-        value={ShowText}
-        onChange={(e) => changeText(e)}
-      />
+      {
+          condicion ?  <textarea
+          className="m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5"
+          value={ShowText}
+          onChange={(e) => changeText(e)}
+        /> 
+        
+        : 
+        
+        <div className='text-center h-screen w-screen bg-orange-100 font-mono mb-5 flex-col justify-center'>
+          <input className='text-2xl font-bold text-rose-950' type="file" accept=".txt" onChange={e => changeTextFile(e)} />
+          <div>
+          <textarea className='m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5' value={ShowText} readOnly />
+          </div>
+          <div className=''>
+          <p className='text-2xl font-bold text-rose-950'>Palabras escritas: {count()}</p>
+          </div>
+          <div > 
+          <button className='bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800' onClick={findReservedWords}>Buscar palabras y operadores</button>
+          </div>
+        </div>
+        
+      }
+     
       <div>
         <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={findReservedWords}>
           Analizar texto
         </button>
         <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={saveToTextFile}>
           Guardar análisis
+        </button>
+        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={() => { setCondicion(!condicion) }}>
+          Cargar Archivo
         </button>
         <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={clearArea}>
           Limpiar
