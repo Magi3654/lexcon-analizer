@@ -94,107 +94,99 @@ function removeCommentsFromCode(text) {
 }
 
 function Examen() {
-    const [ShowText, setShowText] = useState('');
-    const [foundWords, setFoundWords] = useState([]);
-  
-    const changeText = (e) => {
-      e.preventDefault();
-      const reader = new FileReader();
-      reader.readAsText(e.target.files[0]);
-      reader.onload = (e) => {
-        const file = e.target.result;
-        const codeWithOutComments = removeCommentsFromCode(file);
-        setShowText(codeWithOutComments);
-      }
-    }
-  
-    const findReservedWords = () => {
-        const words = ShowText.match(/((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
-        const found = words.map((word) => {
-            if (reservedWords.some(rw => rw.word === word)) {
-                const rw = reservedWords.find(r => r.word === word);
-                return {
-                  word,
-                  tipo: rw.tipo,
-                };
-            } else if (logicalOperators.some((op) => op.word === word)) {
-                return {
-                word,
-                tipo: 'LO',
-                };
-            } else if (mathOperators.some((op) => op.word === word)) {
-                return {
-                word,
-                tipo: 'MO',
-                };
-            } else if (relationalOperators.some((op) => op.word === word)) {
-                return {
-                word,
-                tipo: 'RO',
-                };
-            } else if (groupingOperators.some((op) => op.word === word)) {
-                return {
-                word,
-                tipo: 'GO',
-                };
-            } else if (/^[0-9]+$/.test(word)) {
-                return {
-                word,
-                tipo: 'NUM',
-                };
-            } else {
-                return {
-                word,
-                tipo: 'ID',
-                };
-            }
-            });
-    
-        setFoundWords(found);
-        saveToTextFile(found);
-      };
+  const [ShowText, setShowText] = useState('');
+  const [foundWords, setFoundWords] = useState([]);
 
-       
-    const saveToTextFile = (data) => {
-      const content = data.map(item => `${item.word} - ${item.tipo}`).join('\n');
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      FileSaver.saveAs(blob, 'palabras_analizadas.txt');
-    }
-  
-    const clearArea = () => {
-      setShowText(' ');
-    }
-  
-    const count = () => {
-      if (ShowText) {
-        const words = ShowText.split(/[a-zA-Z]+|[0-9]+/g).filter(word => word.trim() !== "");
-        return words.length;
+  const changeText = (e) => {
+    setShowText(e.target.value);
+  };
+
+  const findReservedWords = () => {
+    const words = ShowText.match(/((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
+    const found = words.map((word) => {
+      if (reservedWords.some((rw) => rw.word === word)) {
+        const rw = reservedWords.find((r) => r.word === word);
+        return {
+          word,
+          tipo: rw.tipo,
+        };
+      } else if (logicalOperators.some((op) => op.word === word)) {
+        return {
+          word,
+          tipo: 'LO',
+        };
+      } else if (mathOperators.some((op) => op.word === word)) {
+        return {
+          word,
+          tipo: 'MO',
+        };
+      } else if (relationalOperators.some((op) => op.word === word)) {
+        return {
+          word,
+          tipo: 'RO',
+        };
+      } else if (groupingOperators.some((op) => op.word === word)) {
+        return {
+          word,
+          tipo: 'GO',
+        };
+      } else if (numbers.some((num) => num.word === word)) {
+        return {
+          word,
+          tipo: 'NUM',
+        };
       } else {
-        return 0;
+        return {
+          word,
+          tipo: 'ID',
+        };
       }
-    }
+    });
+
+    setFoundWords(found);
+  };
+
+  const saveToTextFile = () => {
+    const content = foundWords.map((item) => `${item.word} - ${item.tipo}`).join('\n');
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    FileSaver.saveAs(blob, 'palabras_analizadas.txt');
+  };
+
+  const clearArea = () => {
+    setShowText('');
+    setFoundWords([]);
+  };
+
   return (
-    <div className='text-center h-screen w-screen bg-orange-100 font-mono mb-5 flex-col justify-center'>
-    <input className='text-2xl font-bold text-rose-950' type="file" accept=".txt" onChange={e => changeText(e)} />
-    <div>
-      <textarea className='m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5' value={ShowText} readOnly />
+    <div className="text-center h-screen w-screen bg-orange-100 font-mono mb-5 flex-col justify-center">
+      <textarea
+        className="m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5"
+        value={ShowText}
+        onChange={(e) => changeText(e)}
+      />
+      <div>
+        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={findReservedWords}>
+          Analizar texto
+        </button>
+        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={saveToTextFile}>
+          Guardar análisis
+        </button>
+        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={clearArea}>
+          Limpiar
+        </button>
+      </div>
+      <div>
+        <h3 className="text-2xl font-bold text-rose-950">Palabras y operadores encontrados:</h3>
+        <ul>
+          {foundWords.map((palabra, index) => (
+            <li className="text-2xl font-bold text-rose-950" key={index}>
+              {palabra.word} - {palabra.tipo}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
-    <div className=''>
-      <p className='text-2xl font-bold text-rose-950'>Palabras escritas: {count()}</p>
-    </div>
-    <div > 
-      <button className='bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800' onClick={findReservedWords}>Buscar palabras y operadores</button>
-    </div>
-    <div >
-      <h3 className='text-2xl font-bold text-rose-950 '>Palabras y operadores encontrados:</h3>
-      <ul>
-        {foundWords.map((palabra, index) => (
-          <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li>
-        ))}
-      </ul>
-    </div>
-  </div>
-);
+  );
 }
 
-export default Examen
+export default Examen;
