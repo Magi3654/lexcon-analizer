@@ -204,6 +204,14 @@ function Examen() {
           <div > 
           <button className='bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800' onClick={findReservedWords}>Buscar palabras y operadores</button>
           </div>
+          <div >
+            <h3 className='text-2xl font-bold text-rose-950 '>Palabras y operadores encontrados:</h3>
+            <ul>
+              {foundWords.map((palabra, index) => (
+                <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li>
+              ))}
+            </ul>
+          </div>
         </div>
         
       }
@@ -221,6 +229,14 @@ function Examen() {
         <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={clearArea}>
           Limpiar
         </button>
+        <div >
+          <h3 className='text-2xl font-bold text-rose-950 '>Palabras y operadores encontrados:</h3>
+          <ul>
+            {foundWords.map((palabra, index) => (
+              <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div>
         <h3 className="text-2xl font-bold text-rose-950">Palabras y operadores encontrados:</h3>
