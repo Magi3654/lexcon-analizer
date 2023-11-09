@@ -117,7 +117,8 @@ function Examen() {
   
   
   const findReservedWords = () => {
-    const words = ShowText.match(/((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
+    const codeWithOutComments = ShowText.replace(/(\/\/[^\n]*)|\/\*[\s\S]*?\*\//g, '');
+    const words = codeWithOutComments.match(/,|\;|((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
     console.log(words);
     const found = words.map((word) => {
       if (reservedWords.some((rw) => rw.word === word)) {
@@ -150,6 +151,16 @@ function Examen() {
         return {
           word,
           tipo: 'NUM',
+        };
+      } else if(/,/.test(word)){
+        return{
+          word,
+          tipo: 'COMA',
+        };
+      } else if (/;/.test(word)){
+        return{
+          word,
+          tipo: 'PUNTO Y COMA'
         };
       } else {
         return {
@@ -186,7 +197,7 @@ function Examen() {
     <div className="text-center h-screen w-screen bg-orange-100 font-mono mb-5 flex-col justify-center">
       {
           condicion ?  <textarea
-          className="m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5"
+          className="m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-screen h-60 mt-5"
           value={ShowText}
           onChange={(e) => changeText(e)}
         /> 
@@ -202,10 +213,10 @@ function Examen() {
           <p className='text-2xl font-bold text-rose-950'>Palabras escritas: {count()}</p>
           </div>
           <div > 
-          <button className='bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800' onClick={findReservedWords}>Buscar palabras y operadores</button>
+          <button className='bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800' onClick={()=>findReservedWords(ShowText)}>Buscar palabras y operadores</button>
           </div>
-          <div >
-            <h3 className='text-2xl font-bold text-rose-950 '>Palabras y operadores encontrados:</h3>
+          <div className='h-screen w-screen bg-orange-100'>
+            <h3 className='text-2xl font-bold text-rose-950'>Palabras y operadores encontrados:</h3>
             <ul>
               {foundWords.map((palabra, index) => (
                 <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li>
@@ -216,8 +227,8 @@ function Examen() {
         
       }
      
-      <div>
-        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={findReservedWords}>
+      <div className='h-screen w-screen bg-orange-100'>
+        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={()=>findReservedWords(ShowText)}>
           Analizar texto
         </button>
         <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={saveToTextFile}>
@@ -237,16 +248,6 @@ function Examen() {
             ))}
           </ul>
         </div>
-      </div>
-      <div>
-        <h3 className="text-2xl font-bold text-rose-950">Palabras y operadores encontrados:</h3>
-        <ul>
-          {foundWords.map((palabra, index) => (
-            <li className="text-2xl font-bold text-rose-950" key={index}>
-              {palabra.word} - {palabra.tipo}
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
