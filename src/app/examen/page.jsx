@@ -98,10 +98,14 @@ function Examen() {
   const [foundWords, setFoundWords] = useState([]);
   const [condicion, setCondicion] = useState(true)
   const [ShowTextFile, setShowTextFile] = useState('');
+  const [tokenC, setTokenC] = useState(0);
+  const [caracterC, setCaracterC] = useState(0);
+
+
 
   const changeText = (e) => {
     setShowText(e.target.value);
-    console.log(ShowText);
+    setCaracterC(e.target.value.length);
   };
   
   const changeTextFile = (e) => {
@@ -110,16 +114,16 @@ function Examen() {
     reader.readAsText(e.target.files[0]);
     reader.onload = (e) => {
       const file = e.target.result;
-      const codeWithOutComments = removeCommentsFromCode(file);
-      setShowText(codeWithOutComments);
+      setShowText(file);
     }
   }
   
   
   const findReservedWords = () => {
+    console.log(ShowText);
     const codeWithOutComments = ShowText.replace(/(\/\/[^\n]*)|\/\*[\s\S]*?\*\//g, '');
     const words = codeWithOutComments.match(/,|\;|((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
-    console.log(words);
+    setTokenC(words.length);
     const found = words.map((word) => {
       if (reservedWords.some((rw) => rw.word === word)) {
         const rw = reservedWords.find((r) => r.word === word);
@@ -183,6 +187,8 @@ function Examen() {
   const clearArea = () => {
     setShowText('');
     setFoundWords([]);
+    setCaracterC(0);
+    setTokenC(0);
   };
   const count = () => {
     if (ShowText) {
@@ -204,31 +210,17 @@ function Examen() {
         
         : 
         
-        <div className='text-center h-screen w-screen bg-orange-100 font-mono mb-5 flex-col justify-center'>
+        <div className='text-center w-screen bg-orange-100 font-mono mb-5 flex-col justify-center'>
           <input className='text-2xl font-bold text-rose-950' type="file" accept=".txt" onChange={e => changeTextFile(e)} />
           <div>
           <textarea className='m-4 text-rose-950 font-mono text-2xl bg-orange-200 rounded-md p-1 pt-2 w-full h-60 mt-5' value={ShowText} readOnly />
-          </div>
-          <div className=''>
-          <p className='text-2xl font-bold text-rose-950'>Palabras escritas: {count()}</p>
-          </div>
-          <div > 
-          <button className='bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800' onClick={()=>findReservedWords(ShowText)}>Buscar palabras y operadores</button>
-          </div>
-          <div className='h-screen w-screen bg-orange-100'>
-            <h3 className='text-2xl font-bold text-rose-950'>Palabras y operadores encontrados:</h3>
-            <ul>
-              {foundWords.map((palabra, index) => (
-                <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li>
-              ))}
-            </ul>
           </div>
         </div>
         
       }
      
-      <div className='h-screen w-screen bg-orange-100'>
-        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={()=>findReservedWords(ShowText)}>
+      <div className=' w-screen bg-orange-100'>
+        <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={()=>findReservedWords()}>
           Analizar texto
         </button>
         <button className="bg-sky-900 rounded-md p-3 shadow-lg hover-bg-orange-800" onClick={saveToTextFile}>
@@ -241,6 +233,7 @@ function Examen() {
           Limpiar
         </button>
         <div >
+          <p className='text-2xl font-bold text-rose-950'>Tokens Encontrados: {tokenC}</p>
           <h3 className='text-2xl font-bold text-rose-950 '>Palabras y operadores encontrados:</h3>
           <ul>
             {foundWords.map((palabra, index) => (
