@@ -53,12 +53,14 @@ const relationalOperators = [
    { word: ">", tipo: "OR" },
    { word: "<=", tipo: "OR" },
    { word: ">=", tipo: "OR" },
+   { word: "=", tipo: "OR"},
   ];
   
 const logicalOperators = [
     { word: "&&", tipo: "OL" },
     { word: "||", tipo: "OL" },
     { word: "!", tipo: "OL" },
+    { word: "&", tipo: "OL"},
   ];
   
 const groupingOperators = [
@@ -97,9 +99,17 @@ function Examen() {
   const [ShowText, setShowText] = useState('');
   const [foundWords, setFoundWords] = useState([]);
   const [condicion, setCondicion] = useState(true)
-  const [ShowTextFile, setShowTextFile] = useState('');
   const [tokenC, setTokenC] = useState(0);
   const [caracterC, setCaracterC] = useState(0);
+  const [reserved, setReserved] = useState(0);
+  const [mathS, setMathS] = useState(0);
+  const [relational, setRelational] = useState(0);
+  const [logical, setLogical] = useState(0);
+  const [group,setGroup] = useState(0);
+  const [isNumbers, setNumbers] = useState(0);
+  const [coma, setComa] = useState(0);
+  const [puntoComa, setPuntoComa] = useState(0);
+  const [identifier, setIdentifier] = useState(0);
 
 
 
@@ -112,7 +122,7 @@ function Examen() {
     e.preventDefault();
     const reader = new FileReader();
     reader.readAsText(e.target.files[0]);
-    reader.onload = (e) => {
+    reader.onload = (e) => { 
       const file = e.target.result;
       setShowText(file);
     }
@@ -120,53 +130,74 @@ function Examen() {
   
   
   const findReservedWords = () => {
-    console.log(ShowText);
+    
+    let reserved = 0;
+    let mathS = 0;
+    let relational = 0;
+    let logical = 0;
+    let group = 0;
+    let isNumbers = 0;
+    let coma = 0;
+    let puntoComa = 0;
+    let identifier = 0;
+
+
     const codeWithOutComments = ShowText.replace(/(\/\/[^\n]*)|\/\*[\s\S]*?\*\//g, '');
-    const words = codeWithOutComments.match(/,|\;|((.=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+)/g) || [];
+    const words = codeWithOutComments.match(/,|\;|&|((=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+|\(|\))/g) || [];
+    console.log(words);
     setTokenC(words.length);
     const found = words.map((word) => {
       if (reservedWords.some((rw) => rw.word === word)) {
         const rw = reservedWords.find((r) => r.word === word);
+        reserved++
         return {
           word,
           tipo: rw.tipo,
         };
       } else if (logicalOperators.some((op) => op.word === word)) {
+        logical++
         return {
           word,
           tipo: 'LO',
         };
       } else if (mathOperators.some((op) => op.word === word)) {
+        mathS++
         return {
           word,
           tipo: 'MO',
         };
       } else if (relationalOperators.some((op) => op.word === word)) {
+        relational++
         return {
           word,
           tipo: 'RO',
         };
       } else if (groupingOperators.some((op) => op.word === word)) {
+        group++
         return {
           word,
           tipo: 'GO',
         };
-      } else if (numbers.some((num) => num.word === word)) {
+      } else if (/^[0-9]+$/.test(word)) {
+        isNumbers++
         return {
           word,
           tipo: 'NUM',
         };
       } else if(/,/.test(word)){
+        coma++
         return{
           word,
           tipo: 'COMA',
         };
       } else if (/;/.test(word)){
+        puntoComa++
         return{
           word,
           tipo: 'PUNTO Y COMA'
         };
       } else {
+        identifier++
         return {
           word,
           tipo: 'ID',
@@ -176,6 +207,15 @@ function Examen() {
 
     setFoundWords(found);
     saveToTextFile(found);
+    setReserved(reserved);
+    setMathS(mathS);
+    setLogical(logical);
+    setRelational(relational);
+    setGroup(group);
+    setComa(coma);
+    setNumbers(isNumbers);
+    setPuntoComa(puntoComa);
+    setIdentifier(identifier)
   };
 
   const saveToTextFile = () => {
@@ -184,10 +224,10 @@ function Examen() {
     FileSaver.saveAs(blob, 'palabras_analizadas.txt');
   };
 
+
   const clearArea = () => {
     setShowText('');
     setFoundWords([]);
-    setCaracterC(0);
     setTokenC(0);
   };
   const count = () => {
@@ -233,11 +273,20 @@ function Examen() {
           Limpiar
         </button>
         <div >
-          <p className='text-2xl font-bold text-rose-950'>Tokens Encontrados: {tokenC}</p>
-          <h3 className='text-2xl font-bold text-rose-950 '>Palabras y operadores encontrados:</h3>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Tokens Encontrados Totales: {tokenC}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Palabras Reservadas Totales: {reserved}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Operadores Matematicos Totales: {mathS}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Operadores Relacionales Totales: {relational}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Operadores Lógicos Totales: {logical}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Operadores de Agrupacion Totales: {group}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Numeros Totales: {isNumbers}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Punto y coma Totales: {puntoComa}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Comas Totales: {coma}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>ID's Totales: {identifier}</p>
+          <h3 className='text-2xl font-bold text-rose-950 m-2'>Palabras y operadores encontrados:</h3>
           <ul>
             {foundWords.map((palabra, index) => (
-              <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li>
+              <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li> 
             ))}
           </ul>
         </div>
