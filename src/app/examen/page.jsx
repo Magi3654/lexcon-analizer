@@ -36,6 +36,17 @@ const reservedWords = [
   { word: 'void', tipo: 'PR' },
   { word: 'volatile', tipo: 'PR' },
   { word: 'while', tipo: 'PR' },
+  { word: 'include', tipo: 'PR' },
+  { word: 'printf', tipo: 'PR' },
+  { word: 'scanf', tipo: 'PR' },
+  { word: 'fprintf', tipo: 'PR' },
+  { word: 'fscanf', tipo: 'PR' },
+  { word: 'sprintf', tipo: 'PR' },
+  { word: 'fseek', tipo: 'PR' },
+  { word: 'fopen', tipo: 'PR' },
+  { word: 'fclose', tipo: 'PR' },
+  { word: 'getch', tipo: 'PR' },
+
 ];
 
 const mathOperators = [
@@ -57,8 +68,7 @@ const relationalOperators = [
   ];
   
 const logicalOperators = [
-    { word: "&&", tipo: "OL" },
-    { word: "||", tipo: "OL" },
+    { word: "|", tipo: "OL" },
     { word: "!", tipo: "OL" },
     { word: "&", tipo: "OL"},
   ];
@@ -72,17 +82,11 @@ const groupingOperators = [
     { word: "]", tipo: "OGA" },
   ];
 
-const numbers = [
-  { word: '0', tipo: 'NUM' },
-  { word: '1', tipo: 'NUM' },
-  { word: '2', tipo: 'NUM' },
-  { word: '3', tipo: 'NUM' },
-  { word: '4', tipo: 'NUM' },
-  { word: '5', tipo: 'NUM' },
-  { word: '6', tipo: 'NUM' },
-  { word: '7', tipo: 'NUM' },
-  { word: '8', tipo: 'NUM' },
-  { word: '9', tipo: 'NUM' },
+const seperate = [
+  { word: '.', tipo: 'NUM' },
+  { word: ':', tipo: 'NUM' },
+  { word: ';', tipo: 'NUM' },
+  { word: ',', tipo: 'NUM' },
 ];
 
 function removeCommentsFromCode(text) {
@@ -107,8 +111,7 @@ function Examen() {
   const [logical, setLogical] = useState(0);
   const [group,setGroup] = useState(0);
   const [isNumbers, setNumbers] = useState(0);
-  const [coma, setComa] = useState(0);
-  const [puntoComa, setPuntoComa] = useState(0);
+  const [isSeparador, setSeparador] = useState(0);
   const [identifier, setIdentifier] = useState(0);
 
 
@@ -137,13 +140,12 @@ function Examen() {
     let logical = 0;
     let group = 0;
     let isNumbers = 0;
-    let coma = 0;
-    let puntoComa = 0;
+    let separador = 0;
     let identifier = 0;
 
 
     const codeWithOutComments = ShowText.replace(/(\/\/[^\n]*)|\/\*[\s\S]*?\*\//g, '');
-    const words = codeWithOutComments.match(/,|\;|&|((=)|(\{|\}|\[|\])|(\+|-|\*|\/|%)|(!|>|<|&&|\|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+|[0-9]+|\(|\))/g) || [];
+    const words = codeWithOutComments.match(/(\.|,|\;|\:|=|(\{|\}|\[|\]|\(|\))|(\+|-|\*|\/|%)|(!|>|<|&|\|)|("[a-zA-Z ,!]+")|[a-zA-Z_]+([0-9]+)?|[0-9]+)/g);
     console.log(words);
     setTokenC(words.length);
     const found = words.map((word) => {
@@ -180,21 +182,16 @@ function Examen() {
         };
       } else if (/^[0-9]+$/.test(word)) {
         isNumbers++
+        console.log(word);
         return {
           word,
           tipo: 'NUM',
         };
-      } else if(/,/.test(word)){
-        coma++
+      } else if(seperate.some((se)=>se.word===word)){
+        separador++
         return{
           word,
-          tipo: 'COMA',
-        };
-      } else if (/;/.test(word)){
-        puntoComa++
-        return{
-          word,
-          tipo: 'PUNTO Y COMA'
+          tipo: 'SEPARADOR',
         };
       } else {
         identifier++
@@ -205,17 +202,15 @@ function Examen() {
       }
     });
 
-    setFoundWords(found);
-    saveToTextFile(found);
+    setFoundWords(found);;
     setReserved(reserved);
     setMathS(mathS);
     setLogical(logical);
     setRelational(relational);
     setGroup(group);
-    setComa(coma);
+    setSeparador(separador);
+    setIdentifier(identifier);
     setNumbers(isNumbers);
-    setPuntoComa(puntoComa);
-    setIdentifier(identifier)
   };
 
   const saveToTextFile = () => {
@@ -280,15 +275,9 @@ function Examen() {
           <p className='text-2xl font-bold text-rose-950 m-2'>Operadores Lógicos Totales: {logical}</p>
           <p className='text-2xl font-bold text-rose-950 m-2'>Operadores de Agrupacion Totales: {group}</p>
           <p className='text-2xl font-bold text-rose-950 m-2'>Numeros Totales: {isNumbers}</p>
-          <p className='text-2xl font-bold text-rose-950 m-2'>Punto y coma Totales: {puntoComa}</p>
-          <p className='text-2xl font-bold text-rose-950 m-2'>Comas Totales: {coma}</p>
+          <p className='text-2xl font-bold text-rose-950 m-2'>Separadores Totales: {isSeparador}</p>
           <p className='text-2xl font-bold text-rose-950 m-2'>ID's Totales: {identifier}</p>
-          <h3 className='text-2xl font-bold text-rose-950 m-2'>Palabras y operadores encontrados:</h3>
-          <ul>
-            {foundWords.map((palabra, index) => (
-              <li className='text-2xl font-bold text-rose-950' key={index}>{palabra.word} - {palabra.tipo}</li> 
-            ))}
-          </ul>
+          
         </div>
       </div>
     </div>
