@@ -113,6 +113,7 @@ function Examen() {
   const [isNumbers, setNumbers] = useState(0);
   const [isSeparador, setSeparador] = useState(0);
   const [identifier, setIdentifier] = useState(0);
+  const [cadena, setCadena] =useState(0);
 
 
 
@@ -142,6 +143,7 @@ function Examen() {
     let isNumbers = 0;
     let separador = 0;
     let identifier = 0;
+    let cadena =0;
 
 
     const codeWithOutComments = ShowText.replace(/(\/\/[^\n]*)|\/\*[\s\S]*?\*\//g, '');
@@ -193,6 +195,12 @@ function Examen() {
           word,
           tipo: 'SEPARADOR',
         };
+      }else if(/"('\\'"|.)*?"/.test(word)){
+        cadena++
+        return{
+          word,
+          tipo: 'CADENA',
+        };
       } else {
         identifier++
         return {
@@ -211,6 +219,7 @@ function Examen() {
     setSeparador(separador);
     setIdentifier(identifier);
     setNumbers(isNumbers);
+    setCadena(cadena);
   };
 
   const saveToTextFile = () => {
@@ -277,7 +286,7 @@ function Examen() {
           <p className='text-2xl font-bold text-rose-950 m-2'>Numeros Totales: {isNumbers}</p>
           <p className='text-2xl font-bold text-rose-950 m-2'>Separadores Totales: {isSeparador}</p>
           <p className='text-2xl font-bold text-rose-950 m-2'>ID's Totales: {identifier}</p>
-          
+          <p className='text-2xl font-bold text-rose-950 m-2'>Cadenas Totales: {cadena}</p>
         </div>
       </div>
     </div>
